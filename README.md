@@ -105,7 +105,7 @@ The API is deployed on a publicly accessible endpoint. You can test it using too
 - Programming Language: Python 🐍
 - Framework: Flask (with async support)
 - Asynchronous HTTP Requests: aiohttp
-- Hosting Platform: Render (https://funfactapi-n4au.onrender.co)
+- Hosting Platform: Render (https://funfactapi-n4au.onrender.com)
 
 ## How to Run Locally
 
