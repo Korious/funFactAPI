@@ -48,7 +48,7 @@ def classify_properties(n):
 
 # API Endpoints
 
-@app.route('/api/classify-number', methods=['GET'])
+@app.route('/api', methods=['GET'])
 def classify_number():
     number = request.args.get('number')
     
