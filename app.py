@@ -18,14 +18,14 @@ def is_prime(n):
         return True
     if n % 2 == 0:
         return False
-    for i in range(3, int(math.sqrt(n)) + 1, 2):
+    for i in range(3, int(math.sqrt(abs(n))) + 1, 2):
         if n % i == 0:
             return False
     return True
 
 def is_perfect(n):
     """Check if a number is a perfect number."""
-    if n <= 1:
+    if n <= 0:  # Perfect numbers are positive integers
         return False
     total = 1  # Start with 1 as a divisor
     for i in range(2, int(math.sqrt(n)) + 1):
@@ -37,13 +37,13 @@ def is_perfect(n):
 
 def is_armstrong(n):
     """Check if a number is an Armstrong number."""
-    digits = [int(digit) for digit in str(n)]
+    digits = [int(digit) for digit in str(abs(n))]
     num_digits = len(digits)
-    return sum(digit ** num_digits for digit in digits) == n
+    return sum(digit ** num_digits for digit in digits) == abs(n)
 
 def digit_sum(n):
     """Calculate the sum of digits of a number."""
-    return sum(int(digit) for digit in str(n))
+    return sum(int(digit) for digit in str(abs(n)))
 
 @lru_cache(maxsize=1000)
 async def fetch_fun_fact(session, n):
@@ -70,35 +70,39 @@ def classify_properties(n):
     properties.append("even" if n % 2 == 0 else "odd")
     return properties
 
+def create_response(number, fun_fact):
+    """Create a structured response dictionary."""
+    properties = classify_properties(number)
+    
+    return {
+        "number": number,
+        "is_prime": is_prime(number),
+        "is_perfect": is_perfect(number),
+        "properties": properties,
+        "digit_sum": digit_sum(number),
+        "fun_fact": fun_fact
+    }
+
 # API Endpoint
 @app.route('/api/classify-number', methods=['GET'])
 async def classify_number():
     # Get the 'number' parameter from the query string
     number = request.args.get('number')
     
-    # Input validation
-    if not number or not number.isdigit():
-        return jsonify({"number": number, "error": True}), 400
-    
-    number = int(number)
+    # Input validation: Check for valid integers (positive or negative)
+    try:
+        number = int(number)
+    except (ValueError, TypeError):
+        return jsonify({
+            "number": "alphabet",
+            "error": True
+        }), 400
 
-    # Calculate properties asynchronously where applicable
-    properties = classify_properties(number)
-    
     # Fetch fun fact asynchronously
     fun_fact = await get_fun_fact_async(number)
-    
-    digit_sum_value = digit_sum(number)
 
-    # Create response
-    response = {
-        "number": number,
-        "is_prime": is_prime(number),
-        "is_perfect": is_perfect(number),
-        "properties": properties,
-        "digit_sum": digit_sum_value,
-        "fun_fact": fun_fact
-    }
+    # Create structured response
+    response = create_response(number, fun_fact)
 
     return jsonify(response)
 
