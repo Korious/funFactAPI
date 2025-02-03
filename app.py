@@ -40,7 +40,7 @@ def get_fun_fact(n):
             data = response.json()
             return data.get("text", "No fun fact available")
         return "No fun fact available"
-    except Exception as e:
+    except Exception:
         return "Error fetching fun fact"
 
 def classify_properties(n):
@@ -48,10 +48,7 @@ def classify_properties(n):
     properties = []
     if is_armstrong(n):
         properties.append("armstrong")
-    if n % 2 == 0:
-        properties.append("even")
-    else:
-        properties.append("odd")
+    properties.append("even" if n % 2 == 0 else "odd")
     return properties
 
 # API Endpoint
