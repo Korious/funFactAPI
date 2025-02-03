@@ -42,8 +42,9 @@ def is_armstrong(n):
     return sum(digit ** num_digits for digit in digits) == abs(n)
 
 def digit_sum(n):
-    """Calculate the sum of digits of a number."""
-    return sum(int(digit) for digit in str(abs(n)))
+    """Calculate the sum of digits of a number. Retain sign for negative numbers."""
+    total = sum(int(digit) for digit in str(abs(n)))
+    return -total if n < 0 else total
 
 @lru_cache(maxsize=1000)
 async def fetch_fun_fact(session, n):
