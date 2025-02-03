@@ -142,4 +142,4 @@ The API is deployed on a publicly accessible endpoint. You can test it using too
     http://127.0.0.1:5000/api/classify-number?number=<number>
     ```
 
-- thank you 💗
+**thank you 💗**
